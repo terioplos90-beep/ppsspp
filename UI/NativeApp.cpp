@@ -1597,7 +1597,7 @@ bool NativeKey(const KeyInput &key) {
 	}
 #endif
 
-	// INFO_LOG(Log::System, "Key code: %i flags: %i", key.keyCode, key.flags);
+	 INFO_LOG(Log::System, "Key code: %i flags: %i", key.keyCode, key.flags);
 #if !defined(MOBILE_DEVICE)
 	if (g_Config.bPauseExitsEmulator) {
 		std::vector<int> pspKeys;
