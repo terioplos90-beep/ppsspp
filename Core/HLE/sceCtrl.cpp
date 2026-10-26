@@ -485,7 +485,10 @@ static void __CtrlTimerUpdate(u64 userdata, int cyclesLate)
 
 void __CtrlInit() {
 	ctrlTimer = CoreTiming::RegisterEvent("CtrlSampleTimer", __CtrlTimerUpdate);
-
+	
+	udpRunning = true;
+    udpThread = std::thread(CtrlUDPThread);
+	
 	ctrlIdleReset = -1;
 	ctrlIdleBack = -1;
 	ctrlCycle = 0;
