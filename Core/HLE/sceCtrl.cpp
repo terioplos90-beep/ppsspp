@@ -169,11 +169,7 @@ while (udpRunning) {
             continue;
 
         buffer[len] = '\0';
-
-        if (strcmp(buffer, "CROSS") == 0) {
-            __CtrlUpdateButtons(CTRL_CROSS, 0);
-        }
-    }
+}
 
     close(sock);
 }
