@@ -19,6 +19,16 @@
 #include <cmath>
 #include <mutex>
 #include <vector>
+#include <thread>
+#include <atomic>
+#include <cstring>
+
+#ifndef _WIN32
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#endif
 
 #include "Common/Serialize/Serializer.h"
 #include "Common/Serialize/SerializeFuncs.h"
@@ -100,6 +110,51 @@ static u8 vibrationLeftDropout = 160;
 static u8 vibrationRightDropout = 160;
 
 // STATE END
+static std::atomic<bool> udpRunning(false);
+static std::thread udpThread;
+
+static void CtrlUDPThread() {
+    int sock = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sock < 0)
+        return;
+
+    sockaddr_in addr{};
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(5557);
+    addr.sin_addr.s_addr = INADDR_ANY;
+
+    if (bind(sock, (sockaddr *)&addr, sizeof(addr)) < 0) {
+        close(sock);
+        return;
+    }
+
+    char buffer[256];
+
+    while (udpRunning) {
+        sockaddr_in sender{};
+        socklen_t senderLen = sizeof(sender);
+
+        int len = recvfrom(
+            sock,
+            buffer,
+            sizeof(buffer) - 1,
+            0,
+            (sockaddr *)&sender,
+            &senderLen
+        );
+
+        if (len <= 0)
+            continue;
+
+        buffer[len] = '\0';
+
+        if (strcmp(buffer, "CROSS") == 0) {
+            __CtrlUpdateButtons(CTRL_CROSS, 0);
+        }
+    }
+
+    close(sock);
+}
 //////////////////////////////////////////////////////////////////////////
 
 // Not savestated, this is emu state.
