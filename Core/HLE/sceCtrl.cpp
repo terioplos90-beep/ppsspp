@@ -559,7 +559,12 @@ void __CtrlDoState(PointerWrap &p)
 }
 
 void __CtrlShutdown()
-{
+{ 
+	udpRunning = false;
+
+if (udpThread.joinable())
+    udpThread.join();
+ 
 	waitingThreads.clear();
 	std::lock_guard<std::mutex> guard(ctrlMutex);
 	timedPresses.clear();
