@@ -149,28 +149,7 @@ while (udpRunning) {
     buffer[len] = '\0';
 }
 
-    char buffer[256];
-
-    while (udpRunning) {
-        sockaddr_in sender{};
-        socklen_t senderLen = sizeof(sender);
-
-        int len = recvfrom(
-            sock,
-            buffer,
-            sizeof(buffer) - 1,
-            0,
-            (sockaddr *)&sender,
-            &senderLen
-        );
-
-        if (len <= 0)
-            continue;
-
-        buffer[len] = '\0';
-}
-
-    close(sock);
+	close(sock);
 }
 //////////////////////////////////////////////////////////////////////////
 
