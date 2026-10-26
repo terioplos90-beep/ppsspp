@@ -110,7 +110,6 @@ static u8 vibrationLeftDropout = 160;
 static u8 vibrationRightDropout = 160;
 
 // STATE END
-
 static std::atomic<bool> udpRunning(false);
 static std::thread udpThread;
 
